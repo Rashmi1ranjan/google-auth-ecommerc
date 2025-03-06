@@ -1,0 +1,38 @@
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-error.log
+package-lock.json
+
+# Environment variables
+.env
+
+# Logs
+logs/
+*.log
+debug.log
+error.log
+pm2.log
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+*.db-wal
+*.db-shm
+dump.rdb
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Build files
+dist/
+build/
+
+# VS Code settings
+.vscode/
+*.code-workspace
+
+# Multer uploads (optional, if you don’t want to commit uploaded files)
+uploads/
