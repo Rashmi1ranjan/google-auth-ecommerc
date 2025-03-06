@@ -1,6 +1,7 @@
-//require('dotenv').config();
-const dotenv = require('dotenv');
-dotenv.config();
+
+
+require('dotenv').config(); // Load environment variables
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -10,24 +11,24 @@ const authRoutes = require('./routes/authRoutes');
 const productsRoutes = require('./routes/productRoutes');
 const ordersRoutes = require('./routes/orderRoutes');
 
-
-const connectDb = require('./config/db');  
+const connectDb = require('./config/db');
 const app = express();
-// app.get('/api/auth/google/callback', 
-//     passport.authenticate('google', {
-//         successRedirect: '/dashboard', // Redirect on success
-//         failureRedirect: '/login'     // Redirect on failure
-//     })
-// );
+
+// Log the MongoDB URI to check if it's correctly loaded
+console.log("MongoDB URI from .env:", process.env.MONGODB_URI);
+
+if (!process.env.MONGODB_URI) {
+    console.error(" MONGODB_URI is not defined in .env file!");
+    process.exit(1); // Stop execution if no MongoDB URI is provided
+}
 
 // Middleware
 app.use(express.json());
 app.use(cors());
 
-
 // Session (Required for Passport)
 app.use(session({
-    secret: process.env.JWT_SECRET || 'default_secret',  // Prevents errors if .env is missing
+    secret: process.env.JWT_SECRET || 'default_secret',
     resave: false,
     saveUninitialized: true
 }));
@@ -40,21 +41,10 @@ app.use('/api/v1/user', authRoutes);
 app.use('/api/v1/products', productsRoutes);
 app.use('/api/v1/orders', ordersRoutes);
 
-connectDb();  
 // Database Connection
-mongoose.connect(process.env.MONGO_URI, { 
-    useNewUrlParser: true, 
-    useUnifiedTopology: true 
-})
-.then(() => console.log(' MongoDB Connected '))
-.catch(err => {
-    console.error(' MongoDB Connection Error:', err);
-    process.exit(1); // Exit process on DB connection failure
-});
+connectDb();
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(` Server running on port ${PORT}`));
 
 module.exports = app;
-
-
