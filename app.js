@@ -1,5 +1,6 @@
 //require('dotenv').config();
 const dotenv = require('dotenv');
+dotenv.config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -10,6 +11,7 @@ const productsRoutes = require('./routes/productRoutes');
 const ordersRoutes = require('./routes/orderRoutes');
 
 
+const connectDb = require('./config/db');  
 const app = express();
 // app.get('/api/auth/google/callback', 
 //     passport.authenticate('google', {
@@ -17,9 +19,6 @@ const app = express();
 //         failureRedirect: '/login'     // Redirect on failure
 //     })
 // );
-app.get('/',(req, res) =>{
-    res.send('Server is running!');
-});
 
 // Middleware
 app.use(express.json());
@@ -41,12 +40,13 @@ app.use('/api/v1/user', authRoutes);
 app.use('/api/v1/products', productsRoutes);
 app.use('/api/v1/orders', ordersRoutes);
 
+connectDb();  
 // Database Connection
 mongoose.connect(process.env.MONGO_URI, { 
     useNewUrlParser: true, 
     useUnifiedTopology: true 
 })
-.then(() => console.log(' MongoDB Connected'))
+.then(() => console.log(' MongoDB Connected '))
 .catch(err => {
     console.error(' MongoDB Connection Error:', err);
     process.exit(1); // Exit process on DB connection failure
